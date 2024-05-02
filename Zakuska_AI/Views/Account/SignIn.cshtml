@@ -1,0 +1,48 @@
+﻿@model OldUser
+@{
+    ViewData["Title"] = "Giriş Yap";
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card bg-light shadow-lg">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4" style="color: #ffc107; font-weight: bold;">Zakuska AI'a Hoş Geldiniz!</h2>
+                <form asp-controller="Account" asp-action="SignIn" method="POST">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="font-weight-bold" style="color: #007bff; font-weight: bold;">E-posta Adresi</label>
+                        <input class="form-control" asp-for="Email" placeholder="example@zakuska.com">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password" class="font-weight-bold" style="color: #007bff; font-weight: bold;">Şifre</label>
+                        <input type="password" class="form-control" asp-for="Password" placeholder="Şifreniz">
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="RememberMe" name="RememberMe" />
+                        <label class="form-check-label" for="RememberMe">
+                            Beni Hatırla
+                        </label>
+                    </div>
+
+                    <div class="form-group text-center mt-3">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">Giriş Yap</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="/modules/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="/modules/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+}

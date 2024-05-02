@@ -1,0 +1,125 @@
+﻿@model NewUser
+@{
+    ViewData["Title"] = "Kayıt Ol";
+}
+
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card bg-light shadow-lg">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4" style="color: #ffc107; font-weight: bold;">Zakuska AI'a Kaydolun!</h2>
+                <form asp-controller="Account" asp-action="SignUp" method="POST">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Name" class="font-weight-bold" style="color: #007bff;"><strong>Ad</strong></label>
+                        <input class="form-control" asp-for="Name" placeholder="Adınızı girin">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Surname" class="font-weight-bold" style="color: #007bff;"><strong>Soyad</strong></label>
+                        <input class="form-control" asp-for="Surname" placeholder="Soyadınızı girin">
+                        <span asp-validation-for="Surname" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="font-weight-bold" style="color: #007bff;"><strong>E-posta Adresi</strong></label>
+                        <input class="form-control" asp-for="Email" placeholder="example@zakuska.com">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="UserName" class="font-weight-bold" style="color: #007bff;"><strong>Kullanıcı Adı</strong></label>
+                        <input class="form-control" asp-for="UserName" placeholder="example_zakuska">
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password" class="font-weight-bold" style="color: #007bff;"><strong>Şifre</strong></label>
+                        <input type="password" class="form-control" asp-for="Password" placeholder="Şifrenizi belirleyin">
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword" class="font-weight-bold" style="color: #007bff;"><strong>Şifre Tekrar</strong></label>
+                        <input type="password" class="form-control" asp-for="ConfirmPassword" placeholder="Şifrenizi tekrar girin">
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Interests" class="font-weight-bold" style="color: #007bff;"><strong>Akademik Ilgi Alanlari </strong></label><br>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="chk1" name="Interests" value="Artificial Intelligence and Machine Learning">
+                            <label class="form-check-label" for="chk1"> Artificial Intelligence and Machine Learning</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="chk2" name="Interests" value="Data Science and Big Data Analytics">
+                            <label class="form-check-label" for="chk2"> Data Science and Big Data Analytics</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="chk3" name="Interests" value="Cybersecurity">
+                            <label class="form-check-label" for="chk3"> Cybersecurity</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="chk4" name="Interests" value="Blockchain and Cryptocurrency">
+                            <label class="form-check-label" for="chk4"> Blockchain and Cryptocurrency</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="chk5" name="Interests" value="Computer Vision and Image Processing">
+                            <label class="form-check-label" for="chk5"> Computer Vision and Image Processing</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="chk6" name="Interests" value="Parallel and Distributed Computing">
+                            <label class="form-check-label" for="chk6"> Parallel and Distributed Computing</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="chk7" name="Interests" value="Computer Networks and Communications">
+                            <label class="form-check-label" for="chk7"> Computer Networks and Communications</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="chk8" name="Interests" value="Computer Graphics and Virtual Reality">
+                            <label class="form-check-label" for="chk8"> Computer Graphics and Virtual Reality</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="chk9" name="Interests" value="Distributed Systems and Cloud Computing">
+                            <label class="form-check-label" for="chk9"> Distributed Systems and Cloud Computing</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="chk10" name="Interests" value="Automated Programming and Code Generation">
+                            <label class="form-check-label" for="chk10"> Automated Programming and Code Generation</label>
+                        </div>
+                    </div>
+
+
+               
+                    <input type="hidden" id="selectedInterests" name="SelectedInterests" />
+
+                    <div class="form-group text-center mt-3">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">Kayıt Ol</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="/modules/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="/modules/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        // Checkbox'ların değişikliklerini dinleyen bir işlev
+        function updateSelectedInterests() {
+            var checkboxes = document.querySelectorAll('input[name="Interests"]:checked');
+            var selectedInterests = Array.from(checkboxes).map(cb => cb.value).join(',');
+            document.getElementById('selectedInterests').value = selectedInterests;
+        }
+
+        // Checkbox'ların değişikliklerini dinlemek için olay dinleyicilerini ekleyin
+        var interestCheckboxes = document.querySelectorAll('input[name="Interests"]');
+        interestCheckboxes.forEach(cb => {
+            cb.addEventListener('change', updateSelectedInterests);
+        });
+    </script>
+
+
+
+
+
+
+}
