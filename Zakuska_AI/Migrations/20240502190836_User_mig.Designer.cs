@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Zakuska_AI.Data;
 
@@ -11,9 +12,11 @@ using Zakuska_AI.Data;
 namespace ZakuskaAI.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240502190836_User_mig")]
+    partial class Usermig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,10 +246,6 @@ namespace ZakuskaAI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Interests")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -256,10 +255,6 @@ namespace ZakuskaAI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SurName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("userName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
