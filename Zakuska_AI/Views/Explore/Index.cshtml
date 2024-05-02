@@ -1,8 +1,50 @@
 ﻿@model NewUser
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Explore";
     Layout = "_Layout2";
 }
 
-<h1>welcome @Model.UserName</h1>
-
+<div class="container-fluid px-0">
+    <div class="row">
+        <div class="col-md-4 shadow-sm p-3 mb-5 bg-white rounded" style="padding-right: 0;">
+            <h3 class="text-primary">İlgi Alanları</h3>
+            <ul class="list-group">
+                @foreach (var interest in Model.Interests)
+                {
+                    <li class="list-group-item">@interest</li>
+                }
+            </ul>
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-9 shadow-sm p-3 mb-5 bg-white rounded">
+                    <h3 class="text-primary">Makale Önerileri</h3>
+                    <div class="card">
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <li class="list-group-item">Makale Önerisi 1</li>
+                                <li class="list-group-item">Makale Önerisi 2</li>
+                                <li class="list-group-item">Makale Önerisi 3</li>
+                                <li class="list-group-item">Makale Önerisi 4</li>
+                                <li class="list-group-item">Makale Önerisi 5</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="shadow-sm p-3 mb-5 bg-white rounded">
+                        <h3 class="text-primary">Arama</h3>
+                        <form>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Ara...">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit">Ara</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

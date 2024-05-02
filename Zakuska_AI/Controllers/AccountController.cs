@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Zakuska_AI.Data;
 using Zakuska_AI.Models;
 
@@ -9,12 +10,15 @@ namespace Zakuska_AI.Controllers
     {
         private  UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private Context _Context;
+        stringSQL strSQL = new stringSQL();
 
-       
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, Context context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _Context = context;
         }
 
         public IActionResult SignIn()
@@ -42,7 +46,11 @@ namespace Zakuska_AI.Controllers
                 var result = await _signInManager.PasswordSignInAsync(userMail, user.Password, true, true);
                 if (result.Succeeded)
                 {
-                    TempData["UserName"] = user.Email;
+                    var optionsBuilder = new DbContextOptionsBuilder<Context>();
+                    optionsBuilder.UseSqlServer(strSQL.SQLString);
+                    var context = new Context(optionsBuilder.Options);
+                    var searchedUser = context.Users.FirstOrDefault(x => x.Email == user.Email);
+                    TempData["UserName"] = searchedUser.userName;
                     return RedirectToAction("Index", "Explore");
                 }
                 else
@@ -92,6 +100,16 @@ namespace Zakuska_AI.Controllers
                 var result = await _userManager.CreateAsync(appUser,user.Password);
                 if (result.Succeeded)
                 {
+                    _Context.Users.Add(new User
+                    {
+                        Name = user.Name,
+                        SurName=user.Surname,
+                        userName = user.UserName,
+                        Email = user.Email,
+                        Interests = selectedInterests,
+                        
+                    });
+                    await _Context.SaveChangesAsync();
                     TempData["SuccessMessage"] = "Kayıt işlemi başarıyla tamamlandı.";
                     return RedirectToAction("SignIn", "Account");
                 }
