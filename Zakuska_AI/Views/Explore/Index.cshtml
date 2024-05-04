@@ -1,4 +1,4 @@
-﻿@model NewUser
+﻿@model modelDto
 @{
     ViewData["Title"] = "Explore";
     Layout = "_Layout2";
@@ -18,33 +18,33 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-9 shadow-sm p-3 mb-5 bg-white rounded">
-                    <h3 class="text-primary">Makale Önerileri</h3>
+                    <h3 class="text-primary"><strong>Makale Önerileri</strong></h3>
                     <div class="card">
                         <div class="card-body">
                             <ul class="list-group">
-                                <li class="list-group-item">Makale Önerisi 1</li>
-                                <li class="list-group-item">Makale Önerisi 2</li>
-                                <li class="list-group-item">Makale Önerisi 3</li>
-                                <li class="list-group-item">Makale Önerisi 4</li>
-                                <li class="list-group-item">Makale Önerisi 5</li>
+                                @foreach (var item in Model.Suggestions)
+                                {
+                                    <li class="list-group-item"><strong>@item</strong> </li>
+                                }
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="shadow-sm p-3 mb-5 bg-white rounded">
-                        <h3 class="text-primary">Arama</h3>
-                        <form>
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Ara...">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" type="submit">Ara</button>
-                                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="shadow-sm p-3 mb-5 bg-white rounded">
+                    <h3 class="text-primary">Arama</h3>
+                    <form>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Ara...">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">Ara</button>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
