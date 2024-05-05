@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Zakuska_Scholar.styles.css" asp-append-version="true" />
+    <script src="https://kit.fontawesome.com/fa31e48392.js" crossorigin="anonymous"></script>
+
     <style>
         .navbar-brand-centered {
             position: absolute;
@@ -21,6 +23,11 @@
             white-space: nowrap;
             font-weight: bold;
         }
+
+       .content{
+           margin-left:unset;
+           margin-right:unset;
+       }
 
         .navbar-brand {
             color: #ffc107;
@@ -88,7 +95,7 @@
         </nav>
     </header>
 
-    <div class="container">
+    <div class="container-fluid ">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
