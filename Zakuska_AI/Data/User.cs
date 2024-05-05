@@ -10,7 +10,8 @@ namespace Zakuska_AI.Data
         public string userName { get; set; }
         public string Email { get; set; }
         public string Interests { get; set; }
+        public string SearchHistory { get; set; }
 
-        
+
     }
 }

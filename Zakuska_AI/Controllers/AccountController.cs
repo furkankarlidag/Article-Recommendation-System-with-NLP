@@ -107,6 +107,7 @@ namespace Zakuska_AI.Controllers
                         userName = user.UserName,
                         Email = user.Email,
                         Interests = selectedInterests,
+                        SearchHistory = "",
                         
                     });
                     await _Context.SaveChangesAsync();

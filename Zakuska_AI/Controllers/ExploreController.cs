@@ -40,8 +40,12 @@ namespace Zakuska_AI.Controllers
                     UserName = user.userName,
                     Interests = user.Interests.Split(','),
                 };
-                var Content = JsonConvert.SerializeObject(account.Interests);
+                ApiSendingData apiSendingData = new ApiSendingData();
+                apiSendingData.Interests = account.Interests;
+                apiSendingData.UserName = account.UserName;
+                var Content = JsonConvert.SerializeObject(apiSendingData);
                 var stringContent = new StringContent(Content, Encoding.UTF8, "application/json");
+                Console.WriteLine(Content);
                 string apiURL = "http://127.0.0.1:5000/api/process_data";
                 using(HttpClient client = new HttpClient())
                 {
