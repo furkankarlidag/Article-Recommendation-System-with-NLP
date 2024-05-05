@@ -1,13 +1,12 @@
-﻿@model modelDto
-@{
+﻿@{
     ViewData["Title"] = "Explore";
     Layout = "_Layout2";
 }
 
 <div class="container-fluid px-0">
     <div class="row">
-        <div class="col-md-4 shadow-sm p-3 mb-5 bg-white rounded" style="padding-right: 0;">
-            <h3 class="text-primary">İlgi Alanları</h3>
+        <div class="col-md-3 shadow-sm p-3 mb-5 bg-white rounded">
+            <h3>İlgi Alanları</h3>
             <ul class="list-group">
                 @foreach (var interest in Model.Interests)
                 {
@@ -15,28 +14,32 @@
                 }
             </ul>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="row">
-                <div class="col-md-9 shadow-sm p-3 mb-5 bg-white rounded">
-                    <h3 class="text-primary"><strong>Makale Önerileri</strong></h3>
-                    <div class="card">
-                        <div class="card-body">
-                            <ul class="list-group">
-                                @foreach (var item in Model.Suggestions)
-                                {
-                                    <li class="list-group-item"><strong>@item</strong> </li>
-                                }
-                            </ul>
-                        </div>
-                    </div>
+                <div class="col-md-12 shadow-sm p-3 mb-5 bg-white rounded">
+                    <h3><strong>Makale Önerileri</strong></h3>
+                    <ul class="list-group" id="suggestionsList">
+                        @for (var i = 0; i < Model.Suggestions.Length; i++)
+                        {
+                            var item = Model.Suggestions[i];
+                            <li class="list-group-item d-flex justify-content-between align-items-center" data-id="@i">
+                                <strong>@item</strong>
+                              
+                                    <input type="hidden" name="makaleId" value="@i" />
+                                    <button type="submit" name="action" value="dislike" class="btn btn-sm btn-danger">Dislike</button>
+                                    <button type="submit" name="action" value="like" class="btn btn-sm btn-success">Like</button>
+                                
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="shadow-sm p-3 mb-5 bg-white rounded">
-                    <h3 class="text-primary">Arama</h3>
-                    <form>
+            <div class="row">
+                <div class="col-md-12 shadow-sm p-3 mb-5 bg-white rounded">
+                    <h3><strong>Buradan arama yapabilirsiniz</strong></h3>
+                    <form asp-controller="Makale" asp-action="IslemYap" method="post">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Ara...">
+                            <input type="text" class="form-control" placeholder="Ara..." name="searchQuery">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit">Ara</button>
                             </div>
@@ -47,4 +50,25 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const suggestionList = document.getElementById("suggestionsList");
+        suggestionList.addEventListener("click", function (event) {
+            if (event.target.tagName.toLowerCase() === "button") {
+                const button = event.target;
+                const listItem = button.closest(".list-group-item");
+
+                const buttons = listItem.querySelectorAll("button");
+                buttons.forEach(function (btn) {
+                    btn.disabled = true;
+                    btn.style.backgroundColor = "#dddddd";
+                });
+
+                // Formu gönder
+                //listItem.querySelector('form').submit();
+            }
+        });
+    });
+</script>
 

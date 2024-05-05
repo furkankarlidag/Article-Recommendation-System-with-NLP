@@ -8,6 +8,18 @@
         @TempData["SuccessMessage"]
     </div>
 }
+<style>
+    #loadingSpinner {
+        display: none;
+        color: red; /* Yazı rengi */
+        font-weight: bold; /* Kalın yazı */
+    }
+
+    #resultMessage {
+        color: red; /* Yazı rengi */
+        font-weight: bold; /* Kalın yazı */
+    }
+</style>
 <div class="row justify-content-center mt-4">
     <div class="col-md-6">
         <div class="card bg-light shadow-lg">
@@ -33,7 +45,9 @@
                     </div>
 
                     <div class="form-group text-center mt-3">
-                        <button type="submit" class="btn btn-primary btn-lg btn-block">Giriş Yap</button>
+                        <button type="submit" onclick="handleButtonClick()" class="btn btn-primary btn-lg btn-block">Giriş Yap</button>
+                        <div id="loadingSpinner" style="display: none;">Giriş yapılıyor, başlangıç önerileri yükleniyor...</div>
+                        <div id="resultMessage"></div>
                     </div>
                 </form>
             </div>
@@ -45,4 +59,24 @@
 {
     <script src="/modules/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="/modules/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        function handleButtonClick() {
+            // Butona basıldığında yükleme göstergesini göster
+            document.getElementById("loadingSpinner").style.display = "block";
+
+            // AJAX ile işlemi gerçekleştir
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/Makale/IslemYap", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // İşlem tamamlandığında yükleme göstergesini gizle
+                    document.getElementById("loadingSpinner").style.display = "none";
+                    // Sonuç mesajını göster
+                    document.getElementById("resultMessage").innerText = xhr.responseText;
+                }
+            };
+            xhr.send();
+        }
+    </script>
 }
