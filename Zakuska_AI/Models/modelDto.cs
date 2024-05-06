@@ -12,7 +12,9 @@
         public string[] Interests { get; set; }
 
         public string[] Suggestions { get; set; }
+        public string[] secondSuggestions { get; set; }
 
         public string[] Similarities { get; set; }
+        public string[] secondSimilarities { get; set; }
     }
 }

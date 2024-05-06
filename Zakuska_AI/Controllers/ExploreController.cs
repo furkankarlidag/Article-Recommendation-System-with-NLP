@@ -8,6 +8,7 @@ using Azure;
 using Azure.Core;
 using Newtonsoft.Json;
 using System.Text;
+using System.Globalization;
 
 namespace Zakuska_AI.Controllers
 {
@@ -16,6 +17,7 @@ namespace Zakuska_AI.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         stringSQL strSQL = new stringSQL();
+        modelDto mainAccount;
         public ExploreController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
@@ -57,7 +59,34 @@ namespace Zakuska_AI.Controllers
                         if (res.IsSuccessStatusCode)
                         {
                             string responseString = await res.Content.ReadAsStringAsync();
-                            account.Suggestions = JsonConvert.DeserializeObject<string[]>(responseString);
+                            List<apiComingData> articleDatas = JsonConvert.DeserializeObject<List<apiComingData>>(responseString);
+
+                            // Her bir öğe için article_name ve similarity değerlerini yazdırma
+                            string[] sug = new string[articleDatas.Count];
+                            string[] sim = new string[articleDatas.Count];
+
+                            for (int i = 0; i < articleDatas.Count; i++)
+                            {
+                                var item = articleDatas[i];
+                                //Console.WriteLine($"Article Name: {item.article_name}, Similarity: {item.similarity}");
+                                sug[i] = item.article_name;
+                                sim[i] = item.similarity;
+                            }
+
+                            
+
+                            account.Suggestions = sug;
+                            account.Similarities = sim;
+
+
+                            mainAccount = new modelDto()
+                            {
+                                Name = user.Name,
+                                SurName = user.SurName,
+                                UserName = user.userName,
+                                Interests = user.Interests.Split(','),
+                                Suggestions = sug,
+                        };
 
                         }
 
@@ -67,9 +96,29 @@ namespace Zakuska_AI.Controllers
                         Console.WriteLine("Error occured here amk: " + e);
                     }
                 }
+                
+                
                 return View(account);
             }
             return View();
+        }
+        [HttpPost]
+        public IActionResult FeedBack(string action, string makaleId)
+        {
+            
+            // action parametresine göre gerekli işlemler yapılabilir
+            if (action == "like")
+            {
+                Console.WriteLine($"Feed back liked  {makaleId}");
+                return NoContent();
+            }
+            else if (action == "dislike")
+            {
+                Console.WriteLine($"Feed back unliked  {makaleId}");
+                return NoContent();
+            }
+
+            return NoContent();
         }
 
     }

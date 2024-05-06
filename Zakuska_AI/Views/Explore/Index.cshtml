@@ -1,21 +1,20 @@
-﻿@{
+﻿@model modelDto
+@{
     ViewData["Title"] = "Explore";
     Layout = "_Layout2";
 }
 <style>
-    /* İlgi Alanları */
+
     #interestsList .list-group-item {
-        background-color: #E9F8E1; /* Yumuşak yeşil */
+        background-color: #E9F8E1;
     }
 
-    /* Fasttext Makale Önerileri */
     #suggestionsList .list-group-item {
-        background-color: #FAF3E6; /* Yumuşak turuncu */
+        background-color: #FAF3E6;
     }
 
-    /* Scibert Makale Önerileri */
     #secondSuggestionsList .list-group-item {
-        background-color: #E8F8FF; /* Yumuşak mavi */
+        background-color: #E8F8FF;
     }
 
     #suggestionsList .list-group-item form {
@@ -27,11 +26,11 @@
         display: flex;
         flex-wrap: wrap;
     }
+
 </style>
 
-<div class="container-fluid px-0">
+<div class="container-fluid px-1">
     <div class="row">
-        <!-- İlgi Alanları -->
         <div class="col-md-2 shadow-sm p-3 mb-5 bg-white rounded">
             <h3>İlgi Alanları</h3>
             <ul class="list-group" id="interestsList">
@@ -42,7 +41,6 @@
             </ul>
         </div>
 
-        <!-- Makale Önerileri -->
         <div class="col-md-5">
             <div class="row">
                 <div class="col-md-12 shadow-sm p-3 mb-5 bg-white rounded">
@@ -52,9 +50,12 @@
                         {
                             var item = Model.Suggestions[i];
                             <li class="list-group-item d-flex justify-content-between align-items-center" data-id="@i">
-                                <strong>@item</strong>
-                                <input type="hidden" name="makaleId" value="@i" />
-                                <form asp-controller="Makale" asp-action="IslemYap" method="post">
+                                <div>
+                                    <strong>@item</strong><br />
+                                    <span style="color:red;"><strong>Benzerlik Oranı: @Model.Similarities[i]</strong></span>
+                                </div>
+                                <form asp-controller="Explore" asp-action="FeedBack" method="post">
+                                    <input type="hidden" name="makaleId" value="@item" />
                                     <button type="submit" name="action" value="dislike" class="btn btn-sm btn-danger">
                                         <i class="fa-solid fa-thumbs-down"></i>
                                     </button>
@@ -69,79 +70,37 @@
             </div>
         </div>
 
-        <!-- İkinci Makale Önerileri -->
         <div class="col-md-5">
             <div class="row">
                 <div class="col-md-12 shadow-sm p-3 mb-5 bg-white rounded">
                     <h3><strong>Scibert Makale Önerileri</strong></h3>
                     <ul class="list-group" id="secondSuggestionsList">
-                        <li class="list-group-item d-flex justify-content-between align-items-center" data-id="">
-                            <strong>Oneri</strong>
-                            <input type="hidden" name="makaleId" value="" />
-                            <form asp-controller="Makale" asp-action="IslemYap" method="post">
-                                <button type="submit" name="action" value="dislike" class="btn btn-sm btn-danger">
-                                    <i class="fa-solid fa-thumbs-down"></i>
-                                </button>
-                                <button type="submit" name="action" value="like" class="btn btn-sm btn-success">
-                                    <i class="fa-solid fa-thumbs-up"></i>
-                                </button>
-                            </form>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center" data-id="">
-                            <strong>Oneri</strong>
-                            <input type="hidden" name="makaleId" value="" />
-                            <form asp-controller="Makale" asp-action="IslemYap" method="post">
-                                <button type="submit" name="action" value="dislike" class="btn btn-sm btn-danger">
-                                    <i class="fa-solid fa-thumbs-down"></i>
-                                </button>
-                                <button type="submit" name="action" value="like" class="btn btn-sm btn-success">
-                                    <i class="fa-solid fa-thumbs-up"></i>
-                                </button>
-                            </form>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center" data-id="">
-                            <strong>Oneri</strong>
-                            <input type="hidden" name="makaleId" value="" />
-                            <form asp-controller="Makale" asp-action="IslemYap" method="post">
-                                <button type="submit" name="action" value="dislike" class="btn btn-sm btn-danger">
-                                    <i class="fa-solid fa-thumbs-down"></i>
-                                </button>
-                                <button type="submit" name="action" value="like" class="btn btn-sm btn-success">
-                                    <i class="fa-solid fa-thumbs-up"></i>
-                                </button>
-                            </form>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center" data-id="">
-                            <strong>Oneri</strong>
-                            <input type="hidden" name="makaleId" value="" />
-                            <form asp-controller="Makale" asp-action="IslemYap" method="post">
-                                <button type="submit" name="action" value="dislike" class="btn btn-sm btn-danger">
-                                    <i class="fa-solid fa-thumbs-down"></i>
-                                </button>
-                                <button type="submit" name="action" value="like" class="btn btn-sm btn-success">
-                                    <i class="fa-solid fa-thumbs-up"></i>
-                                </button>
-                            </form>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center" data-id="">
-                            <strong>Oneri</strong>
-                            <input type="hidden" name="makaleId" value="" />
-                            <form asp-controller="Makale" asp-action="IslemYap" method="post">
-                                <button type="submit" name="action" value="dislike" class="btn btn-sm btn-danger">
-                                    <i class="fa-solid fa-thumbs-down"></i>
-                                </button>
-                                <button type="submit" name="action" value="like" class="btn btn-sm btn-success">
-                                    <i class="fa-solid fa-thumbs-up"></i>
-                                </button>
-                            </form>
-                        </li>
-                        <!-- Diğer önerileri buraya ekleyebilirsiniz -->
+                        @for (var i = 0; i < Model.Suggestions.Length; i++)
+                        {
+                            var item = Model.Suggestions[i];
+                            <li class="list-group-item d-flex justify-content-between align-items-center" data-id="@i">
+                                <div>
+                                    <strong>@item</strong><br />
+                                    <span style="color:red;"><strong>Benzerlik Oranı: @Model.Similarities[i]</strong></span>
+                                </div>
+
+                                <form asp-controller="Explore" asp-action="FeedBack" method="post">
+                                    <input type="hidden" name="makaleId" value="@item" />
+                                    <button type="submit" name="action" value="dislike" class="btn btn-sm btn-danger">
+                                        <i class="fa-solid fa-thumbs-down"></i>
+                                    </button>
+                                    <button type="submit" name="action" value="like" class="btn btn-sm btn-success">
+                                        <i class="fa-solid fa-thumbs-up"></i>
+                                    </button>
+                                </form>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Arama Bölümü -->
+
         <div class="col-md-6 offset-md-3 text-center">
             <div class="shadow-sm p-3 mb-5 bg-white rounded" style="background-color: #F5F1ED !important;">
                 <h3><strong>Buradan arama yapabilirsiniz</strong></h3>
@@ -171,9 +130,8 @@
                     btn.disabled = true;
                     btn.style.backgroundColor = "#dddddd";
                 });
-
                 // Formu gönder
-                //listItem.querySelector('form').submit();
+                listItem.querySelector('form').submit();
             }
         });
     });
@@ -191,7 +149,7 @@
                 });
 
                 // Formu gönder
-                //listItem.querySelector('form').submit();
+                listItem.querySelector('form').submit();
             }
         });
     });
