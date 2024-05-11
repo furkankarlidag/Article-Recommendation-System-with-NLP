@@ -46,13 +46,13 @@
                 <div class="col-md-12 shadow-sm p-3 mb-5 bg-white rounded">
                     <h3><strong>Fasttext Makale Önerileri</strong></h3>
                     <ul class="list-group" id="suggestionsList">
-                        @for (var i = 0; i < Model.Suggestions.Length; i++)
+                        @for (var i = 0; i < Model.Suggestions.Count; i++)
                         {
-                            var item = Model.Suggestions[i];
+                            var item = Model.Suggestions[i].title;
                             <li class="list-group-item d-flex justify-content-between align-items-center" data-id="@i">
                                 <div>
                                     <strong>@item</strong><br />
-                                    <span style="color:red;"><strong>Benzerlik Oranı: @Model.Similarities[i]</strong></span>
+                                    <span style="color:red;"><strong>Benzerlik Oranı: @Model.Suggestions[i].similarity</strong></span>
                                 </div>
                                 <form asp-controller="Explore" asp-action="FeedBack" method="post">
                                     <input type="hidden" name="makaleId" value="@item" />
@@ -75,13 +75,13 @@
                 <div class="col-md-12 shadow-sm p-3 mb-5 bg-white rounded">
                     <h3><strong>Scibert Makale Önerileri</strong></h3>
                     <ul class="list-group" id="secondSuggestionsList">
-                        @for (var i = 0; i < Model.Suggestions.Length; i++)
+                        @for (var i = 0; i < Model.SuggestionsScibert.Count; i++)
                         {
-                            var item = Model.Suggestions[i];
+                            var item = Model.SuggestionsScibert[i].title;
                             <li class="list-group-item d-flex justify-content-between align-items-center" data-id="@i">
                                 <div>
                                     <strong>@item</strong><br />
-                                    <span style="color:red;"><strong>Benzerlik Oranı: @Model.Similarities[i]</strong></span>
+                                    <span style="color:red;"><strong>Benzerlik Oranı: @Model.SuggestionsScibert[i].similarity</strong></span>
                                 </div>
 
                                 <form asp-controller="Explore" asp-action="FeedBack" method="post">

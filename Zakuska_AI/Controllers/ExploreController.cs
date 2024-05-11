@@ -45,11 +45,16 @@ namespace Zakuska_AI.Controllers
                 ApiSendingData apiSendingData = new ApiSendingData();
                 apiSendingData.Interests = account.Interests;
                 apiSendingData.UserName = account.UserName;
-                var Content = JsonConvert.SerializeObject(apiSendingData);
+                var Content = JsonConvert.SerializeObject(apiSendingData.Interests);
                 var stringContent = new StringContent(Content, Encoding.UTF8, "application/json");
                 Console.WriteLine(Content);
-                string apiURL = "http://127.0.0.1:5000/api/process_data";
-                using(HttpClient client = new HttpClient())
+                string baseUrl = "http://127.0.0.1:8000/";
+                string endpoint = "recommendation/";
+                string userId = apiSendingData.UserName;
+
+                // Parametreleri birleştirerek tam URL oluştur
+                string apiURL = $"{baseUrl}{endpoint}{userId}";
+                using (HttpClient client = new HttpClient())
                 {
                     client.Timeout = Timeout.InfiniteTimeSpan;
 
@@ -59,35 +64,12 @@ namespace Zakuska_AI.Controllers
                         if (res.IsSuccessStatusCode)
                         {
                             string responseString = await res.Content.ReadAsStringAsync();
-                            List<apiComingData> articleDatas = JsonConvert.DeserializeObject<List<apiComingData>>(responseString);
-
-                            // Her bir öğe için article_name ve similarity değerlerini yazdırma
-                            string[] sug = new string[articleDatas.Count];
-                            string[] sim = new string[articleDatas.Count];
-
-                            for (int i = 0; i < articleDatas.Count; i++)
-                            {
-                                var item = articleDatas[i];
-                                //Console.WriteLine($"Article Name: {item.article_name}, Similarity: {item.similarity}");
-                                sug[i] = item.article_name;
-                                sim[i] = item.similarity;
-                            }
-
+                            Console.WriteLine(responseString);
+                            List<apiComingData> datas = JsonConvert.DeserializeObject<List<apiComingData>>(responseString);
                             
-
-                            account.Suggestions = sug;
-                            account.Similarities = sim;
-
-
-                            mainAccount = new modelDto()
-                            {
-                                Name = user.Name,
-                                SurName = user.SurName,
-                                UserName = user.userName,
-                                Interests = user.Interests.Split(','),
-                                Suggestions = sug,
-                        };
-
+                            List<apiComingData> veriler = new List<apiComingData>();
+                            int i = 0;
+                            account.Suggestions = datas;
                         }
 
                     }
@@ -96,8 +78,34 @@ namespace Zakuska_AI.Controllers
                         Console.WriteLine("Error occured here amk: " + e);
                     }
                 }
-                
-                
+                string endpoint2 = "recommendation_scibert/";
+                string api2URL = $"{baseUrl}{endpoint2}{userId}";
+                using (HttpClient client = new HttpClient())
+                {
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+
+                    try
+                    {
+                        var res = await client.PostAsync(api2URL, stringContent);
+                        if (res.IsSuccessStatusCode)
+                        {
+                            string responseString = await res.Content.ReadAsStringAsync();
+                            Console.WriteLine(responseString);
+                            List<apiComingData> datas = JsonConvert.DeserializeObject<List<apiComingData>>(responseString);
+
+                            List<apiComingData> veriler = new List<apiComingData>();
+                            int i = 0;
+                            account.SuggestionsScibert = datas;
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Error occured here amk: " + e);
+                    }
+                }
+
+
                 return View(account);
             }
             return View();
