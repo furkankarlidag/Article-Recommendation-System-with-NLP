@@ -9,6 +9,9 @@
         background-color: #E9F8E1;
     }
 
+    .grey-button {
+        background-color: grey;
+    }
     #suggestionsList .list-group-item {
         background-color: #FAF3E6;
     }
@@ -41,6 +44,7 @@
             </ul>
         </div>
 
+        
         <div class="col-md-5">
             <div class="row">
                 <div class="col-md-12 shadow-sm p-3 mb-5 bg-white rounded">
@@ -49,17 +53,21 @@
                         @for (var i = 0; i < Model.Suggestions.Count; i++)
                         {
                             var item = Model.Suggestions[i].title;
+                            var suggestionJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Suggestions[i]);
                             <li class="list-group-item d-flex justify-content-between align-items-center" data-id="@i">
                                 <div>
-                                    <strong>@item</strong><br />
+                                    <strong>
+                                        <a href="@Url.Action("Detay", "Explore", new { str = Model.Suggestions[i].title })" style="color: navy;">@item</a>
+                                    </strong><br />
                                     <span style="color:red;"><strong>Benzerlik Oranı: @Model.Suggestions[i].similarity</strong></span>
                                 </div>
                                 <form asp-controller="Explore" asp-action="FeedBack" method="post">
                                     <input type="hidden" name="makaleId" value="@item" />
-                                    <button type="submit" name="action" value="dislike" class="btn btn-sm btn-danger">
+
+                                    <button type="submit" name="action" value="dislike" id="feedbackNo_@i" class="btn btn-sm btn-danger" onclick="setFeedbackText('@i','no')">
                                         <i class="fa-solid fa-thumbs-down"></i>
                                     </button>
-                                    <button type="submit" name="action" value="like" class="btn btn-sm btn-success">
+                                    <button type="submit" name="action" value="like" id="feedbackYes_@i" class="btn btn-sm btn-success" onclick="setFeedbackText('@i','yes')">
                                         <i class="fa-solid fa-thumbs-up"></i>
                                     </button>
                                 </form>
@@ -69,6 +77,8 @@
                 </div>
             </div>
         </div>
+
+        
 
         <div class="col-md-5">
             <div class="row">
@@ -80,7 +90,9 @@
                             var item = Model.SuggestionsScibert[i].title;
                             <li class="list-group-item d-flex justify-content-between align-items-center" data-id="@i">
                                 <div>
-                                    <strong>@item</strong><br />
+                                    <strong>
+                                        <a href="@Url.Action("Detay", "Explore", new { str = Model.SuggestionsScibert[i].title })" style="color: navy;">@item</a>
+                                    </strong><br />
                                     <span style="color:red;"><strong>Benzerlik Oranı: @Model.SuggestionsScibert[i].similarity</strong></span>
                                 </div>
 
@@ -104,9 +116,10 @@
         <div class="col-md-6 offset-md-3 text-center">
             <div class="shadow-sm p-3 mb-5 bg-white rounded" style="background-color: #F5F1ED !important;">
                 <h3><strong>Buradan arama yapabilirsiniz</strong></h3>
-                <form asp-controller="Makale" asp-action="IslemYap" method="post">
+                <form asp-controller="Explore" asp-action="Search" method="post">
+                    <input type="hidden" name="userName" value="@User.Identity.Name" />
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Ara..." name="searchQuery">
+                        <input type="text" class="form-control" placeholder="Ara..." name="searchQuery" required>
                         <div class="input-group-append">
                             <button class="btn btn-primary" type="submit">Ara</button>
                         </div>
@@ -116,41 +129,94 @@
 
         </div>
     </div>
+
+
+    <div class="container">
+        @using (Html.BeginForm("SearchDetails", "Explore", FormMethod.Get))
+        {
+            <div class="row">
+                @if (Model.FasttextSearchResults != null)
+                {
+                    <div class="col-md-8">
+                        <div class="shadow-sm p-3 mb-5 bg-white rounded">
+                            <h3><strong>Fasttext Arama Sonuclari</strong></h3>
+                            <ul class="list-group" id="suggestionsList">
+                                @for (var i = 0; i < Model.FasttextSearchResults.Count; i++)
+                                {
+                                    var item = Model.FasttextSearchResults[i].title;
+                                    var suggestionJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model.FasttextSearchResults[i]);
+                                    <li class="list-group-item d-flex justify-content-between align-items-center" data-id="@i">
+                                        <div>
+                                            <strong>
+                                                <a href="@Url.Action("Detay", "Explore", new { str = Model.FasttextSearchResults[i].title })" style="color: navy;">@item</a>
+                                            </strong><br />
+                                            <span style="color:red;"><strong>Benzerlik Oranı: @Model.FasttextSearchResults[i].similarity</strong></span>
+                                        </div>
+                                        <form asp-controller="Explore" asp-action="FeedBack" method="post">
+                                            <input type="hidden" name="makaleId" value="@item" />
+                                            <button type="submit" name="action" value="dislike" class="btn btn-sm btn-danger">
+                                                <i class="fa-solid fa-thumbs-down"></i>
+                                            </button>
+                                            <button type="submit" name="action" value="like" class="btn btn-sm btn-success">
+                                                <i class="fa-solid fa-thumbs-up"></i>
+                                            </button>
+                                        </form>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.ScibertSearchResults != null)
+                {
+                    <div class="col-md-8">
+                        <div class="shadow-sm p-3 mb-5 bg-white rounded">
+                            <h3><strong>Scibert Arama Sonuclari</strong></h3>
+                            <ul class="list-group" id="secondSuggestionsList">
+                                @for (var i = 0; i < Model.ScibertSearchResults.Count; i++)
+                                {
+                                    var item = Model.ScibertSearchResults[i].title;
+                                    var suggestionJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model.ScibertSearchResults[i]);
+                                    <li class="list-group-item d-flex justify-content-between align-items-center" data-id="@i">
+                                        <div>
+                                            <strong>
+                                                <a href="@Url.Action("Detay", "Explore", new { str = Model.ScibertSearchResults[i].title })" style="color: navy;">@item</a>
+                                            </strong><br />
+                                            <span style="color:red;"><strong>Benzerlik Oranı: @Model.ScibertSearchResults[i].similarity</strong></span>
+                                        </div>
+                                        <form asp-controller="Explore" asp-action="FeedBack" method="post">
+                                            <input type="hidden" name="makaleId" value="@item" />
+
+                                            <button type="submit" name="action" value="dislike" id="feedbackNo_@i" class="btn btn-sm btn-danger" onclick="setFeedbackText('@i','no')">
+                                                <i class="fa-solid fa-thumbs-down"></i>
+                                            </button>
+                                            <button type="submit" name="action" value="like" id="feedbackYes_@i" class="btn btn-sm btn-success" onclick="setFeedbackText('@i','yes')">
+                                                <i class="fa-solid fa-thumbs-up"></i>
+                                            </button>
+                                        </form>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
 </div>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const suggestionList = document.getElementById("suggestionsList");
-        suggestionList.addEventListener("click", function (event) {
-            if (event.target.tagName.toLowerCase() === "button") {
-                const button = event.target;
-                const listItem = button.closest(".list-group-item");
+    function setFeedbackText(id, text, clickedButton) {
+        var feedbackbutton1 = document.getElementById('feedbackNo_' + id);
+        var feedbackbutton2 = document.getElementById('feedbackYes_' + id);
 
-                const buttons = listItem.querySelectorAll("button");
-                buttons.forEach(function (btn) {
-                    btn.disabled = true;
-                    btn.style.backgroundColor = "#dddddd";
-                });
-                // Formu gönder
-                listItem.querySelector('form').submit();
-            }
-        });
-    });
-    document.addEventListener("DOMContentLoaded", function () {
-        const suggestionList = document.getElementById("secondSuggestionsList");
-        suggestionList.addEventListener("click", function (event) {
-            if (event.target.tagName.toLowerCase() === "button") {
-                const button = event.target;
-                const listItem = button.closest(".list-group-item");
-
-                const buttons = listItem.querySelectorAll("button");
-                buttons.forEach(function (btn) {
-                    btn.disabled = true;
-                    btn.style.backgroundColor = "#dddddd";
-                });
-
-                // Formu gönder
-                listItem.querySelector('form').submit();
-            }
-        });
-    });
+        
+            feedbackbutton2.classList.add('grey-button');
+        
+            feedbackbutton1.classList.add('grey-button');
+        
+    }
 </script>
+
+
+
