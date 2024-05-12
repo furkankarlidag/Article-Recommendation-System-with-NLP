@@ -13,6 +13,9 @@
 
         public List<apiComingData> Suggestions { get; set; }
         public List<apiComingData> SuggestionsScibert { get; set; }
+        public List<apiComingData> FasttextSearchResults { get; set; }
+        public List<apiComingData> ScibertSearchResults { get; set; }
+
 
     }
 }
