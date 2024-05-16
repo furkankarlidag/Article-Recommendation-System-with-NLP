@@ -17,6 +17,17 @@
 
     .card-text {
         color: #333;
+        font-size: 1.1em; /* Yazı boyutunu arttırdım */
+        font-family: Montserrat, sans-serif;
+        font-weight: 600; /* Yazıyı kalınlaştırdım */
+    }
+
+    .card-text-title {
+        color: #000;
+        font-size: 1.2em; /* Başlık yazı boyutunu biraz daha büyüttüm */
+        font-family: Montserrat, sans-serif;
+        font-weight: 700; /* Başlık yazıyı daha da kalınlaştırdım */
+        margin-bottom: 5px; /* Başlık altına biraz boşluk ekledim */
     }
 
     .detail-title {
@@ -25,6 +36,8 @@
         padding: 10px;
         border-radius: 5px;
         margin-bottom: 20px;
+        font-size: 2.5em; /* Başlık boyutunu arttırdım */
+        font-weight: 700; /* Başlık yazısını kalınlaştırdım */
     }
 
     .card.mb-4 {
@@ -39,20 +52,18 @@
             <h1 class="detail-title">@Model.title</h1>
             <div class="card mb-4">
                 <div class="card-body">
-
                     <div class="card-text-wrapper">
-                        <p class="card-text" style="font-family: Montserrat, sans-serif; font-weight: 600;">Abstract: Model.abstractText</p>
+                        <p class="card-text-title">Keywords:</p>
+                        <p class="card-text">@string.Join(", ", @Model.keywords)</p>
                     </div>
                     <div class="card-text-wrapper">
-                        <p class="card-text" style="font-family: Montserrat, sans-serif; font-weight: 600;">Fulltext: Model.fulltext</p>
+                        <p class="card-text-title">Id:</p>
+                        <p class="card-text">@Model.name</p>
                     </div>
                     <div class="card-text-wrapper">
-                        <p class="card-text" style="font-family: Montserrat, sans-serif; font-weight: 600;">Keywords: Model.keywords</p>
+                        <p class="card-text-title">Fulltext:</p>
+                        <p class="card-text">@Model.fulltext</p>
                     </div>
-                    <div class="card-text-wrapper">
-                        <p class="card-text" style="font-family: Montserrat, sans-serif; font-weight: 600;">Id: Model.name</p>
-                    </div>
-                    
                 </div>
             </div>
         </div>

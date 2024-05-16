@@ -36,6 +36,7 @@ namespace Zakuska_AI.Controllers
             }
             else
             {
+                
                 var userMail = await _userManager.FindByEmailAsync(user.Email);
 
                 if (userMail == null)
@@ -46,11 +47,14 @@ namespace Zakuska_AI.Controllers
                 var result = await _signInManager.PasswordSignInAsync(userMail, user.Password, true, true);
                 if (result.Succeeded)
                 {
+                    
                     var optionsBuilder = new DbContextOptionsBuilder<Context>();
                     optionsBuilder.UseSqlServer(strSQL.SQLString);
                     var context = new Context(optionsBuilder.Options);
                     var searchedUser = context.Users.FirstOrDefault(x => x.Email == user.Email);
                     TempData["UserName"] = searchedUser.userName;
+                    ViewData["SuccessMessage"] = "Giriş başarılı!";
+
                     return RedirectToAction("Index", "Explore");
                 }
                 else

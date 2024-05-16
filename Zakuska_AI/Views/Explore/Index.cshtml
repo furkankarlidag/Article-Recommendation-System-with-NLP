@@ -4,32 +4,59 @@
     Layout = "_Layout2";
 }
 <style>
-
     #interestsList .list-group-item {
         background-color: #E9F8E1;
+    }
+
+    .alert-box {
+        display: none;
+        position: fixed;
+        top: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #f0f0f0;
+        border: 1px solid #28a745;
+        border-radius: 4px;
+        padding: 10px 20px;
+        color: #28a745;
+        width: 300px;
+        text-align: center;
+        z-index: 1000;
+    }
+
+    .success-icon {
+        margin-right: 5px;
     }
 
     .grey-button {
         background-color: grey;
     }
+
     #suggestionsList .list-group-item {
         background-color: #FAF3E6;
     }
+
 
     #secondSuggestionsList .list-group-item {
         background-color: #E8F8FF;
     }
 
-    #suggestionsList .list-group-item form {
-        display: flex;
-        flex-wrap: wrap;
+    #searchSuggestionsList .list-group-item {
+        background-color: #FAF3E6;
     }
 
-    #secondSuggestionsList .list-group-item form {
-        display: flex;
-        flex-wrap: wrap;
+    #searchSecondSuggestionsList .list-group-item {
+        background-color: #E8F8FF;
     }
 
+
+        #suggestionsList .list-group-item form,
+        #secondSuggestionsList .list-group-item form,
+        #searchSuggestionsList .list-group-item form,
+        #searchSecondSuggestionsList .list-group-item form {
+            display: flex;
+            flex-wrap: wrap;
+        }
 </style>
 
 <div class="container-fluid px-1">
@@ -44,7 +71,6 @@
             </ul>
         </div>
 
-        
         <div class="col-md-5">
             <div class="row">
                 <div class="col-md-12 shadow-sm p-3 mb-5 bg-white rounded">
@@ -57,17 +83,17 @@
                             <li class="list-group-item d-flex justify-content-between align-items-center" data-id="@i">
                                 <div>
                                     <strong>
-                                        <a href="@Url.Action("Detay", "Explore", new { str = Model.Suggestions[i].title })" style="color: navy;">@item</a>
+                                        <a href="@Url.Action("Detay", "Explore", new { str = Model.Suggestions[i].name })" style="color: navy;">@item</a>
                                     </strong><br />
                                     <span style="color:red;"><strong>Benzerlik Oranı: @Model.Suggestions[i].similarity</strong></span>
                                 </div>
                                 <form asp-controller="Explore" asp-action="FeedBack" method="post">
-                                    <input type="hidden" name="makaleId" value="@item" />
-
-                                    <button type="submit" name="action" value="dislike" id="feedbackNo_@i" class="btn btn-sm btn-danger" onclick="setFeedbackText('@i','no')">
+                                    <input type="hidden" name="articleKeywords" value="@string.Join(",", Model.Suggestions[i].keywords)" />
+                                    <input type="hidden" name="userId" value="@User.Identity.Name" />
+                                    <button type="submit" name="action" value="dislike" id="feedbackNo_Fasttext_@i" class="btn btn-sm btn-danger" onclick="setFeedbackText('Fasttext', '@i', 'no')">
                                         <i class="fa-solid fa-thumbs-down"></i>
                                     </button>
-                                    <button type="submit" name="action" value="like" id="feedbackYes_@i" class="btn btn-sm btn-success" onclick="setFeedbackText('@i','yes')">
+                                    <button type="submit" name="action" value="like" id="feedbackYes_Fasttext_@i" class="btn btn-sm btn-success" onclick="setFeedbackText('Fasttext', '@i', 'yes')">
                                         <i class="fa-solid fa-thumbs-up"></i>
                                     </button>
                                 </form>
@@ -77,8 +103,6 @@
                 </div>
             </div>
         </div>
-
-        
 
         <div class="col-md-5">
             <div class="row">
@@ -91,17 +115,17 @@
                             <li class="list-group-item d-flex justify-content-between align-items-center" data-id="@i">
                                 <div>
                                     <strong>
-                                        <a href="@Url.Action("Detay", "Explore", new { str = Model.SuggestionsScibert[i].title })" style="color: navy;">@item</a>
+                                        <a href="@Url.Action("Detay", "Explore", new { str = Model.SuggestionsScibert[i].name })" style="color: navy;">@item</a>
                                     </strong><br />
                                     <span style="color:red;"><strong>Benzerlik Oranı: @Model.SuggestionsScibert[i].similarity</strong></span>
                                 </div>
-
                                 <form asp-controller="Explore" asp-action="FeedBack" method="post">
-                                    <input type="hidden" name="makaleId" value="@item" />
-                                    <button type="submit" name="action" value="dislike" class="btn btn-sm btn-danger">
+                                    <input type="hidden" name="articleKeywords" value="@string.Join(",", Model.SuggestionsScibert[i].keywords)" />
+                                    <input type="hidden" name="userId" value="@User.Identity.Name" />
+                                    <button type="submit" name="action" value="dislike" id="feedbackNo_Scibert_@i" class="btn btn-sm btn-danger" onclick="setFeedbackText('Scibert', '@i', 'no')">
                                         <i class="fa-solid fa-thumbs-down"></i>
                                     </button>
-                                    <button type="submit" name="action" value="like" class="btn btn-sm btn-success">
+                                    <button type="submit" name="action" value="like" id="feedbackYes_Scibert_@i" class="btn btn-sm btn-success" onclick="setFeedbackText('Scibert', '@i', 'yes')">
                                         <i class="fa-solid fa-thumbs-up"></i>
                                     </button>
                                 </form>
@@ -112,6 +136,9 @@
             </div>
         </div>
 
+        <div id="successMessage" class="alert-box">
+            <i class="fas fa-check-circle success-icon"></i> Feedback işlemi başarıyla gerçekleştirildi.
+        </div>
 
         <div class="col-md-6 offset-md-3 text-center">
             <div class="shadow-sm p-3 mb-5 bg-white rounded" style="background-color: #F5F1ED !important;">
@@ -126,21 +153,19 @@
                     </div>
                 </form>
             </div>
-
         </div>
     </div>
 
-
-    <div class="container">
+    <div class="container" style="align-items:center;">
         @using (Html.BeginForm("SearchDetails", "Explore", FormMethod.Get))
         {
             <div class="row">
                 @if (Model.FasttextSearchResults != null)
                 {
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <div class="shadow-sm p-3 mb-5 bg-white rounded">
-                            <h3><strong>Fasttext Arama Sonuclari</strong></h3>
-                            <ul class="list-group" id="suggestionsList">
+                            <h3><strong>Fasttext Arama Sonuçları</strong></h3>
+                            <ul class="list-group" id="searchSuggestionsList">
                                 @for (var i = 0; i < Model.FasttextSearchResults.Count; i++)
                                 {
                                     var item = Model.FasttextSearchResults[i].title;
@@ -148,16 +173,17 @@
                                     <li class="list-group-item d-flex justify-content-between align-items-center" data-id="@i">
                                         <div>
                                             <strong>
-                                                <a href="@Url.Action("Detay", "Explore", new { str = Model.FasttextSearchResults[i].title })" style="color: navy;">@item</a>
+                                                <a href="@Url.Action("Detay", "Explore", new { str = Model.FasttextSearchResults[i].name })" style="color: navy;">@item</a>
                                             </strong><br />
                                             <span style="color:red;"><strong>Benzerlik Oranı: @Model.FasttextSearchResults[i].similarity</strong></span>
                                         </div>
                                         <form asp-controller="Explore" asp-action="FeedBack" method="post">
-                                            <input type="hidden" name="makaleId" value="@item" />
-                                            <button type="submit" name="action" value="dislike" class="btn btn-sm btn-danger">
+                                            <input type="hidden" name="articleKeywords" value="@string.Join(",", Model.FasttextSearchResults[i].keywords)" />
+                                            <input type="hidden" name="userId" value="@User.Identity.Name" />
+                                            <button type="submit" name="action" value="dislike" id="feedbackNo_SearchFasttext_@i" class="btn btn-sm btn-danger" onclick="setFeedbackText('SearchFasttext', '@i', 'no')">
                                                 <i class="fa-solid fa-thumbs-down"></i>
                                             </button>
-                                            <button type="submit" name="action" value="like" class="btn btn-sm btn-success">
+                                            <button type="submit" name="action" value="like" id="feedbackYes_SearchFasttext_@i" class="btn btn-sm btn-success" onclick="setFeedbackText('SearchFasttext', '@i', 'yes')">
                                                 <i class="fa-solid fa-thumbs-up"></i>
                                             </button>
                                         </form>
@@ -170,10 +196,10 @@
 
                 @if (Model.ScibertSearchResults != null)
                 {
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <div class="shadow-sm p-3 mb-5 bg-white rounded">
-                            <h3><strong>Scibert Arama Sonuclari</strong></h3>
-                            <ul class="list-group" id="secondSuggestionsList">
+                            <h3><strong>Scibert Arama Sonuçları</strong></h3>
+                            <ul class="list-group" id="searchSecondSuggestionsList">
                                 @for (var i = 0; i < Model.ScibertSearchResults.Count; i++)
                                 {
                                     var item = Model.ScibertSearchResults[i].title;
@@ -181,17 +207,17 @@
                                     <li class="list-group-item d-flex justify-content-between align-items-center" data-id="@i">
                                         <div>
                                             <strong>
-                                                <a href="@Url.Action("Detay", "Explore", new { str = Model.ScibertSearchResults[i].title })" style="color: navy;">@item</a>
+                                                <a href="@Url.Action("Detay", "Explore", new { str = Model.ScibertSearchResults[i].name })" style="color: navy;">@item</a>
                                             </strong><br />
                                             <span style="color:red;"><strong>Benzerlik Oranı: @Model.ScibertSearchResults[i].similarity</strong></span>
                                         </div>
                                         <form asp-controller="Explore" asp-action="FeedBack" method="post">
-                                            <input type="hidden" name="makaleId" value="@item" />
-
-                                            <button type="submit" name="action" value="dislike" id="feedbackNo_@i" class="btn btn-sm btn-danger" onclick="setFeedbackText('@i','no')">
+                                            <input type="hidden" name="articleKeywords" value="@string.Join(",", Model.ScibertSearchResults[i].keywords)" />
+                                            <input type="hidden" name="userId" value="@User.Identity.Name" />
+                                            <button type="submit" name="action" value="dislike" id="feedbackNo_SearchScibert_@i" class="btn btn-sm btn-danger" onclick="setFeedbackText('SearchScibert', '@i', 'no')">
                                                 <i class="fa-solid fa-thumbs-down"></i>
                                             </button>
-                                            <button type="submit" name="action" value="like" id="feedbackYes_@i" class="btn btn-sm btn-success" onclick="setFeedbackText('@i','yes')">
+                                            <button type="submit" name="action" value="like" id="feedbackYes_SearchScibert_@i" class="btn btn-sm btn-success" onclick="setFeedbackText('SearchScibert', '@i', 'yes')">
                                                 <i class="fa-solid fa-thumbs-up"></i>
                                             </button>
                                         </form>
@@ -204,19 +230,35 @@
             </div>
         }
     </div>
-</div>
-<script>
-    function setFeedbackText(id, text, clickedButton) {
-        var feedbackbutton1 = document.getElementById('feedbackNo_' + id);
-        var feedbackbutton2 = document.getElementById('feedbackYes_' + id);
 
-        
-            feedbackbutton2.classList.add('grey-button');
-        
-            feedbackbutton1.classList.add('grey-button');
-        
+</div>
+
+<script>
+    function setFeedbackText(prefix, id, text) {
+        var feedbackNoButtons = document.querySelectorAll('[id^="feedbackNo_' + prefix + '_"]');
+        var feedbackYesButtons = document.querySelectorAll('[id^="feedbackYes_' + prefix + '_"]');
+
+        feedbackNoButtons.forEach(button => {
+            if (button.id.endsWith('_' + id)) {
+                button.classList.add('grey-button');
+            }
+        });
+
+        feedbackYesButtons.forEach(button => {
+            if (button.id.endsWith('_' + id)) {
+                button.classList.add('grey-button');
+            }
+        });
+
+        showSuccessMessage();
+    }
+
+    function showSuccessMessage() {
+        var successMessage = document.getElementById("successMessage");
+        successMessage.style.display = "block"; // Görünür hale getir
+        // 3 saniye sonra bildirimi tekrar gizle
+        setTimeout(function () {
+            successMessage.style.display = "none"; // Gizle
+        }, 3000); // 3000 milisaniye = 3 saniye
     }
 </script>
-
-
-

@@ -116,18 +116,73 @@ namespace Zakuska_AI.Controllers
         
 
         [HttpPost]
-        public IActionResult FeedBack(string action, string makaleId)
+        public async Task<IActionResult> FeedBack(string action, string articleKeywords,string userId)
         {
-            
-            // action parametresine göre gerekli işlemler yapılabilir
+            string baseUrl = "http://127.0.0.1:8000/";
+            string[] keywords = articleKeywords.Split(',');
+
             if (action == "like")
             {
-                Console.WriteLine($"Feed back liked  {makaleId}");
+                var Content = JsonConvert.SerializeObject(keywords);
+                var stringContent = new StringContent(Content, Encoding.UTF8, "application/json");
+                
+                
+                string endpoint = "like/";
+                
+
+              
+                string apiURL = $"{baseUrl}{endpoint}{userId}";
+                using (HttpClient client = new HttpClient())
+                {
+                    Console.WriteLine(apiURL + "-----");
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    Console.WriteLine(Content);
+                    try
+                    {
+                        var res = await client.PostAsync(apiURL, stringContent);
+                        if (res.IsSuccessStatusCode)
+                        {
+                            Console.WriteLine("like succesfull " + stringContent + userId);
+                        }
+                        
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Error occured here amk: " + e);
+                    }
+                }
                 return NoContent();
             }
             else if (action == "dislike")
             {
-                Console.WriteLine($"Feed back unliked  {makaleId}");
+                var Content = JsonConvert.SerializeObject(keywords);
+                var stringContent = new StringContent(Content, Encoding.UTF8, "application/json");
+
+
+                string endpoint = "dislike/";
+
+
+
+                string apiURL = $"{baseUrl}{endpoint}{userId}";
+                using (HttpClient client = new HttpClient())
+                {
+                    Console.WriteLine(apiURL + "-----");
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    Console.WriteLine(Content);
+                    try
+                    {
+                        var res = await client.PostAsync(apiURL, stringContent);
+                        if (res.IsSuccessStatusCode)
+                        {
+                            Console.WriteLine("dislike succesfull " + stringContent + userId);
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Error occured here amk: " + e);
+                    }
+                }
                 return NoContent();
             }
 
@@ -205,14 +260,42 @@ namespace Zakuska_AI.Controllers
         public IActionResult Detay (string str)
         {
             apiComingData data = new apiComingData();
-            /*/*List<apiComingData> veriler = JsonConvert.DeserializeObject<List<apiComingData>>(str);
-            data.fulltext = veriler[0].fulltext;
-            data.title = veriler[0].title;
-            data.keywords = veriler[0].keywords;
-            data.abstractText = veriler[0].abstractText;
-            data.name = veriler[0].name;*/
-            data.title = str;
-            return View(data);
+            for (int i = 0; i < 5; i++)
+            {
+                if(str == mainAccount.Suggestions[i].name)
+                {
+                    data = mainAccount.Suggestions[i];
+                    
+                    return View("Detay", data);
+                }
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                if (str == mainAccount.SuggestionsScibert[i].name)
+                {
+                    data = mainAccount.SuggestionsScibert[i];
+                    return View("Detay", data);
+                }
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                if (str == mainAccount.FasttextSearchResults[i].name)
+                {
+                    data = mainAccount.FasttextSearchResults[i];
+                    return View("Detay", data);
+                }
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                if (str == mainAccount.ScibertSearchResults[i].name)
+                {
+                    data = mainAccount.ScibertSearchResults[i];
+                    return View("Detay", data);
+                }
+            }
+
+
+            return NoContent();
         }
     }
 }
