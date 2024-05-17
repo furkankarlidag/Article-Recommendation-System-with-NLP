@@ -60,6 +60,12 @@
                         <p class="card-text-title">Id:</p>
                         <p class="card-text">@Model.name</p>
                     </div>
+                    if(@Model.abstractText != null){
+                    <div class="card-text-wrapper">
+                        <p class="card-text-title">Abstract:</p>
+                        <p class="card-text">@Model.abstractText</p>
+                    </div>
+                    }
                     <div class="card-text-wrapper">
                         <p class="card-text-title">Fulltext:</p>
                         <p class="card-text">@Model.fulltext</p>
