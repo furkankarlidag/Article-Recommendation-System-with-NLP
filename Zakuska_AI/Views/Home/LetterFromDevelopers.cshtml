@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "A Letter From Developers";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        .container {
+            text-align: center;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: black;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .image-container {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+            .image-container img {
+                width: 100%;
+            }
+    </style>
+</head>
+<body>
+    <h1>A Letter From Developers</h1>
+    <div class="container">
+        <div class="message">
+            Yazılıma başladığımızda ilk zamanlar böyleydik, keyifliydik. For döngüsüyle kum saati çizmeye kolay diyorduk. Şu an ise hayattan bezmiş, sıkılmış, bunalmış vaziyetteyiz.
+            Bu fotoğrafı ekleyerek Billab, Prolab ve Yazlab serüvenine veda ediyoruz. Yorucu ama öğreticiydi.
+            Emeği geçen herkese ve Mete08'e selam olsun.
+        </div>
+        <div class="image-container">
+            <img src="~/images/foto.jpg" alt="Developers">
+        </div>
+    </div>
+</body>
+</html>

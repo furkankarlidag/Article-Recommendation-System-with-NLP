@@ -23,6 +23,11 @@ namespace Zakuska_AI.Controllers
             return View();
         }
 
+        public IActionResult LetterFromDevelopers()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
