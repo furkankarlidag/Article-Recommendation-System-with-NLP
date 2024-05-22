@@ -1,4 +1,5 @@
 # Article Recommendation System
+# This project developed with @muratergn
 
 ## Overview
 This project provides article recommendations based on users' interests using Natural Language Processing (NLP) with the Krapivin and Inspec datasets. Users can give feedback on these recommendations and search for articles.
